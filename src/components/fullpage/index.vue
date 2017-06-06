@@ -6,9 +6,9 @@
                 <div class="clock">
                     22:11
                 </div>
-                <div class="content">
+                <!--<div class="content">
                     <p class="title">品质成钞两周年庆</p>
-                </div>
+                </div>-->
                 <div class="tips">向下滑动加入留言</div>
             </div>
             <div class="section" :style="{'min-height':pageHeight}">
@@ -40,7 +40,7 @@
     import './assets/javascript.fullPage.css';
     import './assets/arrow.css';
     import './assets/wechat.css';
-
+    import './assets/fonts/PingFang Light.css';
     import fullpage from './assets/javascript.fullPage.js';
     import IFullImg from '../IFullImage/IFullImage';
 
@@ -86,6 +86,7 @@
         text-align: center;
         height: 100%;
         background: rgba(0, 0, 0, 0.2);
+        font-family: "PingFang Light";
     }
 
     .title {
@@ -101,7 +102,7 @@
 
     .tips {
         font-size: 15pt;
-        margin-top: 50%;
+        margin-top: 80%;
     }
 
     .chat {

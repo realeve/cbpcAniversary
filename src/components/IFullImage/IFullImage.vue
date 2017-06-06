@@ -5,7 +5,7 @@
     <div class="fixedcon">
       <div class="control">
         <!--i class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i-->
-        <audio src="/static/bg.mp3" autoplay loop="loop" ref="audio"></audio>
+        <audio src="./static/bg.mp3" autoplay loop="loop" ref="audio"></audio>
       </div>
     </div>
   </div>
