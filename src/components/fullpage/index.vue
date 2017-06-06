@@ -102,7 +102,7 @@
 
     .tips {
         font-size: 15pt;
-        margin-top: 80%;
+        margin-top: 75%;
     }
 
     .chat {
