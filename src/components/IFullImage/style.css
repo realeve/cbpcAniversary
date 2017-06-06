@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     transform: translate3d(0, 0, 0);
-    background-image: url('../../assets/img/page-bg.jpg');
+    background-image: url('./img/page-bg.jpg');
     background-position: bottom left;
     background-repeat: repeat-x;
     background-size: 1300px auto;
@@ -22,7 +22,7 @@
     position: fixed;
     top: 0;
     transform: translate3d(0, 0, 0);
-    background-image: url('../../assets/img/bg-dot.png');
+    background-image: url('./img/bg-dot.png');
     background-position: bottom left;
     background-repeat: repeat-x;
     background-size: 800px auto;
@@ -70,11 +70,11 @@
 .fixedcon .control .music {
     width: 28px;
     height: 28px;
-    background-image: url('../../assets/img/music_on.png');
+    background-image: url('./img/music_on.png');
 }
 
 .fixedcon .control .music.mute {
-    background-image: url('../../assets/img/music_off.png');
+    background-image: url('./img/music_off.png');
 }
 
 .fixedcon .control i.show {
