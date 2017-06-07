@@ -75,7 +75,7 @@
     data() {
       return {
         showArrow: true,
-        now: '00:00:00',
+        now: '00:00',
         swiperItemIndex: 0,
         myChat:''
       }
@@ -94,11 +94,16 @@
     methods: {
       refreshTime() {
         setInterval(() => {
-          this.now = dateFormat(new Date(), 'HH:mm:ss');
+          this.now = dateFormat(new Date(), 'HH:mm');
         }, 1000);
       },
       onSwiperItemIndexChange(index) {
         this.showArrow = index == 0;
+        if(index==0){
+          document.title='';
+        }else{
+          document.title='品质成钞两周年';
+        }
       },
     },
     mounted() {
