@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Home from '@/components/Home'
 
 Vue.use(Router)
 
@@ -13,7 +12,7 @@ export default new Router({
     }, {
         path: '/test',
         component: function(resolve) {
-            require(['../components/Homes.vue'], resolve)
+            require(['../components/Lucky.vue'], resolve)
         }
     }]
 })

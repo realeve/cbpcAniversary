@@ -35,7 +35,7 @@ body {
 .bubble:before {
     position: absolute;
     top: 12px;
-    border: 7px solid transparent;
+    border: 6px solid transparent;
     content: " "
 }
 
@@ -93,11 +93,11 @@ body {
 
 .bubble_hd {
     border-bottom: 1px solid #cfcfcf;
-    padding-bottom: 7px
+    padding-bottom: 6px
 }
 
 .bubble_cont {
-    padding-top: 7px
+    padding-top: 6px
 }
 
 .bubble_cont li {
@@ -182,7 +182,8 @@ body {
 }
 
 .message .content {
-    overflow: hidden
+    overflow: hidden;
+    margin-top: -15px;
 }
 
 .message.me {
@@ -198,3 +199,24 @@ body {
 .message.me .content {
     overflow: hidden
 }
+
+.user,
+.user.me {
+    color: #bbb;
+    font-size: 10pt;
+    padding-left: 10px;
+}
+
+.user.me {
+    padding-left: 0;
+    padding-right: 10px;
+}
+
+
+/*
+.right-content {
+    overflow: hidden;
+    margin-top: -15px;
+    display: flex;
+    flex-direction: column;
+}*/

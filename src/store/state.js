@@ -1,5 +1,6 @@
 const state = {
-    isLoading: false
+    isLoading: false,
+    showArrow: true
 }
 
 export default state

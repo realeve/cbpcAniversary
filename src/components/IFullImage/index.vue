@@ -4,7 +4,7 @@
     <div class="bg-dot"></div>
     <div class="fixedcon">
       <div class="control">
-        <!--i class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i-->
+        <i v-show="showVolume" class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i>
         <audio src="./static/bg.mp3" autoplay loop="loop" ref="audio"></audio>
       </div>
     </div>
@@ -15,6 +15,9 @@
 
 </style>
 <script>
+  import {
+    mapState
+  } from 'vuex'
   export default {
     data() {
       return {
@@ -22,6 +25,9 @@
       }
     },
     computed: {
+      ...mapState({
+        showVolume: state => state.showArrow
+      }),
       player() {
         return this.$refs.audio;
       }
