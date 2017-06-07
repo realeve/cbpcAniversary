@@ -14,7 +14,7 @@
 
           <div v-show="showMessage" class="message" :style="{'width':screenWidth}">
             <transition name="custom-classes-transition" enter-active-class="animated slideInLeft">
-              <img v-show="showMessage" class="avatar" src="../assets/img/logo.png">
+              <img v-show="showMessage" class="avatar" src="../assets/img/logo.jpg">
             </transition>
             <transition name="custom-classes-transition" enter-active-class="animated slideInRight">
               <div v-show="showMessage" class="info">
@@ -31,7 +31,7 @@
             <transition-group enter-active-class="animated zoomIn">
             <div v-for="(item,floors) in comments" :key="floors" class="message" :class="{me:item.isMe}">        
               <img class="avatar" :src="item.header">
-              <div class="content">
+              <div class="content" :class="{'align-right':item.isMe,'align-left':!item.isMe}">
                 <p class="user" :class="{me:item.isMe}">{{item.nickname}} ({{item.prov}}{{item.city}}) #{{floors+1}}</p>
                 <div class="bubble bubble_default" :class="{right:item.isMe,left:!item.isMe,bubble_primary:item.isMe}">
                   <p>{{item.content}}</p>
@@ -250,6 +250,13 @@
       left: 25%;
       right: 25%;
     }
+  }
+
+  .align-left{
+    margin-left:40px;
+  }
+  .align-right{
+    margin-right:40px;
   }
 
   .dialog-footer {
