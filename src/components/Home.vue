@@ -14,7 +14,7 @@
 
           <div v-show="showMessage" class="message" :style="{'width':screenWidth}">
             <transition name="custom-classes-transition" enter-active-class="animated slideInLeft">
-              <img v-show="showMessage" class="avatar" src="/static/logo.png">
+              <img v-show="showMessage" class="avatar" src="../assets/img/logo.png">
             </transition>
             <transition name="custom-classes-transition" enter-active-class="animated slideInRight">
               <div v-show="showMessage" class="info">
@@ -210,7 +210,7 @@
 <style scoped lang="less">
   @white: #fff;
   .home {
-    margin-top: 15%;
+    margin-top: 10%;
     height: 100%;
     text-align: center;
     color: @white;
@@ -244,7 +244,7 @@
       }
     }
     .tips {
-      font-size: 15pt; // margin-top: 90%;
+      font-size: 12pt; // margin-top: 90%;
       position: absolute;
       bottom: 10%;
       left: 25%;
