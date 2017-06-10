@@ -10,7 +10,7 @@ export default new Router({
             require(['../components/Home.vue'], resolve)
         }
     }, {
-        path: '/test',
+        path: '/lucky',
         component: function(resolve) {
             require(['../components/Lucky.vue'], resolve)
         }

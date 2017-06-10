@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     transform: translate3d(0, 0, 0);
-    background-image: url('./img/page-bg.jpg');
+    background-image: url('/static/img/page-bg.jpg');
     background-position: bottom left;
     background-repeat: repeat-x;
     background-size: 1300px auto;

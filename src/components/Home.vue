@@ -12,11 +12,11 @@
           </div>
 
 
-          <div v-show="showMessage" class="message" :style="{'width':screenWidth}">
-            <transition name="custom-classes-transition" enter-active-class="animated slideInLeft">
-              <img v-show="showMessage" class="avatar" src="../assets/img/logo.jpg">
+          <div v-show="showMessage" class="message">
+            <transition name="v-transition" enter-active-class="animated slideInLeft">
+              <img v-show="showMessage" class="avatar" src="/static/img/logo.jpg">
             </transition>
-            <transition name="custom-classes-transition" enter-active-class="animated slideInRight">
+            <transition name="v-transition" enter-active-class="animated slideInRight">
               <div v-show="showMessage" class="info">
                 当前共 {{curUsers}} 人 参与留言，
                 <x-button mini plain class="button-primary-white" @click.native="viewLucky">点击此处</x-button>查看幸运楼层。</div>
@@ -188,13 +188,13 @@
         this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
       },
       viewLucky() {
-        this.$router.push('test');
+        this.$router.push('lucky');
       }
     },
     mounted() {
       this.readComments();
-      let param = querystring.parse('a=b&c=d');
-      console.log(param);
+      // let param = querystring.parse('a=b&c=d');
+      // console.log(param);
       setTimeout(() => {
         this.showMessage = true;
       }, 500);
@@ -224,10 +224,13 @@
     }
     .message {
       margin-top: 20%;
-      padding: 10px 20px 10px 10px;
+      // padding: 10px 20px 10px 10px;
+      display: flex;
+      align-items: center;
       text-align: left;
       background: rgba(0, 0, 0, 0.5);
       font-size: 12pt;
+      width:100%;
       .button-primary-white {
         color: @white;
         border-color: #aaa;
@@ -237,10 +240,14 @@
       .weui-btn_default:not(.weui-btn_disabled):active {
         background-color: rgba(255, 255, 255, 0.2);
       }
-      .info {
-        float: right;
-        margin-left: 45px;
-        margin-top: -45px;
+      // .info {
+      //   float: right;
+      //   margin-left: 45px;
+      //   margin-top: -45px;
+      // }
+      .avatar{
+        padding-right: 0.5em;
+        padding-left:10px;
       }
     }
     .tips {

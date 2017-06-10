@@ -16,10 +16,13 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.isLoading
-    })
+    }),
+    url(){
+      return window.location.href.split('#')[0];
+    }
   },
   mounted(){
-    console.log(this.isLoading);
+    console.log(this.url);
   }
 }
 </script>
