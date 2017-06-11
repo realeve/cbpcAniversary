@@ -4,8 +4,8 @@
     <div class="bg-dot"></div>
     <div class="fixedcon">
       <div class="control">
-        <i v-show="showVolume" class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i>
-        <audio src="./static/bg.mp3" autoplay loop="loop" ref="audio"></audio>
+        <i v-show="showArrow" class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i>
+        <audio src="//cbpm.sinaapp.com/cdn/audio/bg.mp3" autoplay loop="loop" ref="audio"></audio>
       </div>
     </div>
   </div>
@@ -25,9 +25,7 @@
       }
     },
     computed: {
-      ...mapState({
-        showVolume: state => state.showArrow
-      }),
+      ...mapState(['showArrow']),
       player() {
         return this.$refs.audio;
       }

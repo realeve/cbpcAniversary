@@ -12,7 +12,7 @@ import router from './router'
 
 import { WechatPlugin } from 'vux'
 Vue.use(WechatPlugin)
-console.log(Vue.wechat) // 可以直接访问 wx 对象。
+    // console.log(Vue.wechat) // 可以直接访问 wx 对象。
 
 router.beforeEach(function(to, from, next) {
     store.commit('updateLoadingStatus', { isLoading: true })

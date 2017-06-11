@@ -8,7 +8,7 @@
       </div>
       <div class="box">
         <div v-for="(item,floors) in luckyList" class="message">
-          <img class="avatar" :src="item.header" title="jf">
+          <img class="avatar" :src="item.header">
           <div class="content">
             <p class="user">{{item.nickname}} ({{item.prov}}{{item.city}}) #{{item.floor}}</p>
             <div class="bubble left bubble_default">
@@ -105,6 +105,8 @@
       text-align: left;
       .message{
         margin-top:10px;
+        display:flex;
+        
       }
     }
     .footer{

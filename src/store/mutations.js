@@ -6,6 +6,9 @@ let mutations = {
     },
     hideArrow(state, playload) {
         state.showArrow = playload;
+    },
+    setUserinfo(state, val) {
+        state.userInfo = val;
     }
 }
 
