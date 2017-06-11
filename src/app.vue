@@ -29,13 +29,13 @@
       }
     },
     computed: {
-      ...mapState(['isLoading','cdnUrl']),
-      userInfo:{
-        get(){
-          return this.state.userInfo;
+      ...mapState(['isLoading', 'cdnUrl']),
+      userInfo: {
+        get() {
+          return this.$store.state.userInfo;
         },
-        set(val){
-          this.$store.commit('setUserinfo',val);
+        set(val) {
+          this.$store.commit('setUserinfo', val);
         }
       },
       // 签名用URL
@@ -47,7 +47,8 @@
         return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.apiId}&redirect_uri=${encodeURIComponent(this.url)}&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect`;
       },
       shareUrl() {
-        return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.apiId}&redirect_uri=${encodeURIComponent(window.location.href.split('#')[0].split('?')[0])}&response_type=code&scope=snsapi_userinfo&state=1&connect_redirect=1#wechat_redirect`;
+        // 被分享的链接必须在安全域名中，不能直接分享为 redirectUrl
+        return window.location.href.split('#')[0].split('?')[0];
       }
     },
     methods: {
@@ -117,12 +118,13 @@
       },
       wxInit() {
         if (!this.needRedirect()) {
-          this.getWXUserInfo();
-          this.wxPermissionInit().then(res => {
-            this.wxReady(res);
-            this.initWxShare();
-          })
+          // this.getWXUserInfo();
+          this.getWXInfo();
         }
+        this.wxPermissionInit().then(res => {
+          this.wxReady(res);
+          this.initWxShare();
+        })
       },
       needRedirect() {
         let params = querystring.parse(window.location.href.split('?')[1]);
@@ -149,10 +151,10 @@
           "headimgurl": "http://wx.qlogo.cn/mmopen/Q3auHgzwzM5pR1A0Hxo7ibPnxQib1jibiaBSAOW0s3noCngvI4R8nNFf4sXldyyecaM5UZ4eGC9oZicAicM9XndXHBdQ87sFJzV56ebv84KqJHuZs/0",
           "privilege": []
         }
-      }else{
+      } else {
         // 正式环境微信载入
         this.wxInit();
-      }      
+      }
     }
   }
 
