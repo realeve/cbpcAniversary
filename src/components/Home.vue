@@ -104,7 +104,7 @@
         now: '00:00',
         swiperItemIndex: 0,
         myChat: '',
-        curUser: '2344',
+        curUser: '0',
         comments: [],
         showMessage: false,
         curid: {
@@ -249,14 +249,25 @@
           this.comments = [...this.comments, ...newComment];
         });
       },
-      loadCommentByTime(){
+      loadCommentByTime() {
         this.loadMoreComment();
         // 3秒更新数据
-        setInterval(()=>{
+        setInterval(() => {
           this.loadMoreComment();
-        },3000);
+        }, 3000);
+      },
+      getAllCommentNum() {
+        let params = {
+          s: '/addon/Api/Api/getAllCommentNum'
+        }
+        this.$http.jsonp(this.cdnUrl, {
+          params
+        }).then(res=>{
+          this.curUser = res.data[0].num;
+        })
       },
       init() {
+        this.getAllCommentNum();
         setTimeout(() => {
           this.showMessage = true;
         }, 500);
