@@ -33,7 +33,7 @@
             <div class="content align-left">
               <p class="user">{{welcome.nickname}} ({{welcome.province}}{{welcome.city}})</p>
               <div class="bubble bubble_default left">
-                <p>欢迎 {{welcome.welUser}} 加入房间</p>
+                <p>Hello {{welcome.welUser}},终于等到你啦！</p>
               </div>
             </div>
           </div>
@@ -43,8 +43,8 @@
               <img class="avatar" :src="item.headimgurl">
               <div class="content" :class="{'align-right':item.isMe,'align-left':!item.isMe}">
                 <p class="user" :class="{me:item.isMe}">{{item.nickname}} ({{item.province}}{{item.city}}) <span v-if="item.id">#{{item.id}}</span></p>
-                <div class="bubble bubble_default" :class="{right:item.isMe,left:!item.isMe,bubble_primary:item.isMe}">
-                  <p>{{item.content}}</p>
+                <div class="bubble bubble_default" :class="{right:item.isMe,left:!item.isMe,bubble_primary:item.isMe,emoji:item.emoji}">
+                  <p v-html="item.content"></p>
                 </div>
               </div>
             </div>
@@ -89,6 +89,7 @@
   import '../assets/css/arrow.css';
   import '../assets/css/wechat.css';
   import 'animate.css';
+  import defaultMessage from '../assets/data/defaultData.json';
 
   export default {
     components: {
@@ -111,11 +112,20 @@
           min: 0,
           max: 0,
         },
-        welcome: '',
+        welcome: {
+          nickname: '品质成钞',
+          province: '成都',
+          city: '温江',
+          headimgurl: '/static/img/logo.jpg',
+          isMe: 0
+        },
         toast: {
           show: false,
           msg: ''
-        }
+        },
+        startGetData: false,
+        isInited: false,
+        intervalTicket: ''
       }
     },
     computed: {
@@ -146,18 +156,76 @@
     watch: {
       "userInfo.nickname" (val) {
         this.initWelInfo();
+      },
+      startGetData(val) {
+        if (val) {
+          this.loadCommentByTime();
+        }
       }
     },
     methods: {
-      initWelInfo() {
-        this.welcome = {
+      getDefaultSetting() {
+        return {
           nickname: '品质成钞',
           province: '成都',
           city: '温江',
           headimgurl: '/static/img/logo.jpg',
-          welUser: this.userInfo.nickname,
-          isMe: 0
+          isMe: 0,
+          emoji: false
         };
+      },
+      initWelInfo() {
+        Object.assign(this.welcome, {
+          welUser: this.userInfo.nickname,
+        })
+
+        let defaultTime = 100;
+        this.loadDefaultMessage({
+            content: `今天是${dateFormat(new Date(), 'YYYY年M月D日')}，“品质成钞”微信成立两周年啦。钞人贝贝收到了五湖四海的祝福。`
+          }, defaultTime +=
+          1000);
+
+        this.loadDefaultMessage({
+          content: `<img src="./static/img/beibei.gif" style="width:80px;height:80px;"></img>`,
+          emoji: true
+        }, defaultTime += 1000);
+
+        defaultTime += 1000;
+        // 用户ABCD留言
+        for (let i = 0; i < defaultMessage.length; i++) {
+          setTimeout(() => {
+            this.comments.push(defaultMessage[i]);
+            this.scrollToBottom();
+          }, defaultTime + i * 2500);
+        }
+        this.loadDefaultMessage({
+          content: `你要不要也来说两句？`,
+        }, defaultTime += 10000);
+
+        this.loadDefaultMessage({
+          content: `呃……我能说些什么呢?`,
+          nickname: this.userInfo.nickname,
+          province: this.userInfo.province,
+          city: this.userInfo.city,
+          headimgurl: this.userInfo.headimgurl,
+          isMe: true,
+        }, defaultTime += 1000);
+
+        this.loadDefaultMessage({
+          content: `如果你是老粉丝，可以聊聊你喜欢的一期品质成钞微信或者给我们提建议，如果你是新粉丝，就给我们留言送祝福吧。既然来了都是客，快来留言吧！`,
+        }, defaultTime += 1000);
+
+        setTimeout(() => {
+          this.startGetData = true;
+        }, defaultTime + 2000);
+      },
+      loadDefaultMessage(settings, waiting = 100) {
+        if (!Reflect.get(settings, 'emoji')) {
+          settings.emoji = false;
+        }
+        setTimeout(() => {
+          this.comments.push(Object.assign(this.getDefaultSetting(), settings));
+        }, waiting);
       },
       refreshTime() {
         setInterval(() => {
@@ -171,6 +239,15 @@
         } else {
           document.title = '品质成钞两周年';
         }
+
+        // 首次载入时弹出消息
+        if (this.isInited) {
+          return;
+        }
+        if (index == 1) {
+          this.isInited = true;
+          this.initWelInfo();
+        }
       },
       getSubmitData() {
         return {
@@ -182,7 +259,8 @@
           country: this.userInfo.country,
           headimgurl: this.userInfo.headimgurl,
           content: this.myChat,
-          needhide: 0
+          needhide: 0,
+          rec_time: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
         };
       },
       sendComment() {
@@ -199,15 +277,16 @@
         }).then(res => {
           this.toast.show = true;
           this.toast.msg = res.data.msg;
-          this.comments.push({
-            nickname: this.userInfo.nickname,
-            province: this.userInfo.province,
-            city: this.userInfo.city,
-            headimgurl: this.userInfo.headimgurl,
-            content: this.myChat,
-            isMe: true,
-            id: res.data.wx_id
-          });
+          // 实时留言信息不显示
+          // this.comments.push({
+          //   nickname: this.userInfo.nickname,
+          //   province: this.userInfo.province,
+          //   city: this.userInfo.city,
+          //   headimgurl: this.userInfo.headimgurl,
+          //   content: this.myChat,
+          //   isMe: true,
+          //   id: res.data.wx_id
+          // });
           setTimeout(() => {
             this.scrollToBottom();
           }, 1000);
@@ -252,7 +331,7 @@
       loadCommentByTime() {
         this.loadMoreComment();
         // 3秒更新数据
-        setInterval(() => {
+        this.intervalTicket = setInterval(() => {
           this.loadMoreComment();
         }, 3000);
       },
@@ -262,7 +341,7 @@
         }
         this.$http.jsonp(this.cdnUrl, {
           params
-        }).then(res=>{
+        }).then(res => {
           this.curUser = res.data[0].num;
         })
       },
@@ -271,8 +350,6 @@
         setTimeout(() => {
           this.showMessage = true;
         }, 500);
-        this.initWelInfo();
-        this.loadCommentByTime();
       }
     },
     mounted() {
@@ -281,6 +358,12 @@
     created() {
       this.refreshTime();
       document.title = '';
+    },
+    beforeRouteLeave(to, from, next){
+      if(this.intervalTicket){
+        clearInterval(this.intervalTicket);
+      }      
+      next();
     }
   }
 
@@ -309,7 +392,7 @@
       background: rgba(0, 0, 0, 0.5);
       font-size: 12pt;
       width: 100%;
-      padding: 5px 0;
+      padding: 10px 0;
       .button-primary-white {
         color: @white;
         border-color: #aaa;

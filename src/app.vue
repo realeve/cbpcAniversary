@@ -113,13 +113,15 @@
           params
         }).then(res => {
           this.userInfo = res.data;
-          localStorage.setItem('wx_userinfo', JSON.stringify(res.data));
+          if(Reflect.get(res.data,'nickname')){
+            localStorage.setItem('wx_userinfo', JSON.stringify(res.data));
+          }          
         });
       },
       wxInit() {
         if (!this.needRedirect()) {
-          // this.getWXUserInfo();
-          this.getWXInfo();
+          this.getWXUserInfo();
+          // this.getWXInfo();
         }
         this.wxPermissionInit().then(res => {
           this.wxReady(res);

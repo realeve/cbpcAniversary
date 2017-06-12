@@ -53,6 +53,13 @@ body {
     border-right-color: #fff
 }
 
+.emoji,
+.emoji:before,
+.emoji:after {
+    border-right-color: transparent!important;
+    background-color: transparent!important;
+}
+
 .bubble.right:after,
 .bubble.right:before {
     left: 100%
@@ -167,7 +174,7 @@ body {
 }
 
 .message {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     float: left;
     width: 80%
 }
@@ -205,6 +212,7 @@ body {
     color: #bbb;
     font-size: 10pt;
     padding-left: 10px;
+    padding-bottom: 3px;
 }
 
 .user.me {

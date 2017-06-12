@@ -15,5 +15,10 @@ export default new Router({
         component: function(resolve) {
             require(['../components/Lucky.vue'], resolve)
         }
+    }, {
+        path: '/myinfo',
+        component: function(resolve) {
+            require(['../components/MyInfo.vue'], resolve)
+        }
     }]
 })
