@@ -161,6 +161,11 @@
         if (val) {
           this.loadCommentByTime();
         }
+      },
+      comments() {
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        })
       }
     },
     methods: {
@@ -181,9 +186,8 @@
 
         let defaultTime = 100;
         this.loadDefaultMessage({
-            content: `今天是${dateFormat(new Date(), 'YYYY年M月D日')}，“品质成钞”微信成立两周年啦。钞人贝贝收到了五湖四海的祝福。`
-          }, defaultTime +=
-          1000);
+          content: `今天是${dateFormat(new Date(), 'YYYY年M月D日')}，“品质成钞”微信成立两周年啦。钞人贝贝收到了五湖四海的祝福。`
+        }, defaultTime += 1000);
 
         this.loadDefaultMessage({
           content: `<img src="./static/img/beibei.gif" style="width:80px;height:80px;"></img>`,
@@ -195,12 +199,11 @@
         for (let i = 0; i < defaultMessage.length; i++) {
           setTimeout(() => {
             this.comments.push(defaultMessage[i]);
-            this.scrollToBottom();
           }, defaultTime + i * 2500);
         }
         this.loadDefaultMessage({
           content: `你要不要也来说两句？`,
-        }, defaultTime += 10000);
+        }, defaultTime += 12500);
 
         this.loadDefaultMessage({
           content: `呃……我能说些什么呢?`,
@@ -287,9 +290,6 @@
           //   isMe: true,
           //   id: res.data.wx_id
           // });
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 1000);
           this.myChat = '';
         });
       },
@@ -359,10 +359,10 @@
       this.refreshTime();
       document.title = '';
     },
-    beforeRouteLeave(to, from, next){
-      if(this.intervalTicket){
+    beforeRouteLeave(to, from, next) {
+      if (this.intervalTicket) {
         clearInterval(this.intervalTicket);
-      }      
+      }
       next();
     }
   }
