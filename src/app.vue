@@ -15,7 +15,8 @@
   } from 'vux'
 
   import {
-    mapState
+    mapState,
+    mapMutations
   } from 'vuex'
   export default {
     name: 'app',
@@ -70,7 +71,8 @@
           signature: obj.signature,
           jsApiList: [
             'onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo',
-            'onMenuShareQZone'
+            'onMenuShareQZone','hideMenuItems'
+
           ]
         })
       },
@@ -80,7 +82,7 @@
             title: '品质成钞两岁啦！有奖留言快来参加！', // 分享标题
             desc: '群里就差你了！',
             link: this.shareUrl,
-            imgUrl: this.userInfo.headimgurl,
+            imgUrl: 'http://cbpm.sinaapp.com/cdn/static/img/logo.jpg',
             type: '',
             dataUrl: '',
             success: function () {},
@@ -91,6 +93,11 @@
           this.$wechat.onMenuShareQQ(option);
           this.$wechat.onMenuShareWeibo(option);
           this.$wechat.onMenuShareQZone(option);
+
+          // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
+          this.$wechat.hideMenuItems({
+            menuList: ["menuItem:editTag","menuItem:delete","menuItem:copyUrl", "menuItem:originPage", "menuItem:readMode","menuItem:openWithQQBrowser","menuItem:openWithSafari","menuItem:share:email"] 
+          });
         });
       },
       // 获取微信用户信息（昵称，地区）
@@ -113,9 +120,9 @@
           params
         }).then(res => {
           this.userInfo = res.data;
-          if(Reflect.get(res.data,'nickname')){
+          if (Reflect.get(res.data, 'nickname')) {
             localStorage.setItem('wx_userinfo', JSON.stringify(res.data));
-          }          
+          }
         });
       },
       wxInit() {

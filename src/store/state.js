@@ -4,7 +4,9 @@ const state = {
     userInfo: {
 
     },
-    cdnUrl: 'http://cbpc540.applinzi.com/index.php'
+    cdnUrl: 'http://cbpc540.applinzi.com/index.php',
+    mute: false,
+    closeMusic: false,
 }
 
 export default state

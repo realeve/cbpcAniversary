@@ -7,7 +7,8 @@
         <p>幸运楼层列表</p>
       </div>
       <div class="box">
-        <div v-for="(item,floors) in luckyList" :key="floors" class="message" :class="{me:item.isMe}">
+        <div v-for="(item,floors) in luckyList" :key="floors" class="message" :class="{me:item.isMe,'header-me':item.isMe}">
+          <img class="avatar" :src="item.headimgurl">
           <div class="content">
             <p class="user" :class="{me:item.isMe}">{{item.nickname}} ({{item.province}}{{item.city}}) #{{item.id}}</p>
             <div class="bubble bubble_default" :class="{right:item.isMe,left:!item.isMe,bubble_primary:item.isMe,emoji:item.emoji}">
@@ -16,7 +17,6 @@
                 <x-button mini type="warn" class="cgt-button" @click.native="inputMyInfo">点击这里</x-button>输入个人领奖信息。</p>
             </div>
           </div>
-          <img class="avatar" :src="item.headimgurl">
         </div>
       </div>
       <x-button mini plain class="button-primary-white" @click.native="viewHome">返回首页</x-button>
@@ -134,12 +134,19 @@
 
   .cgt {
     font-size: 10pt;
-    .cgt-button{
-      padding:0 5px;
-      margin:0 5px;
-      background-color:#fbdf2c;
-      color:#233;
+    padding-top: 2px;
+    border-top: #eee dashed 1px;
+    .cgt-button {
+      padding: 0 5px;
+      margin: 0 5px;
+      background-color: #fbdf2c;
+      color: #233;
     }
+  }
+
+  .me {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
   }
 
 </style>

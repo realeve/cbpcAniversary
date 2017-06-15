@@ -9,6 +9,12 @@ let mutations = {
     },
     setUserinfo(state, val) {
         state.userInfo = val;
+    },
+    muteSound(state, val) {
+        state.mute = val;
+    },
+    closeMusicByUser(state, val) {
+        state.closeMusic = val;
     }
 }
 

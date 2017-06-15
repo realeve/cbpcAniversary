@@ -3,7 +3,7 @@
     <full-image/>
     <swiper :height="screenHeight" :show-dots="false" @on-index-change="onSwiperItemIndexChange" v-model="swiperItemIndex">
       <swiper-item>
-        <div class="home">
+        <v-touch tag="div" v-on:swipeleft="audioPlayer" v-on:tap="audioPlayer" class="home">
           <div class="clock">
             {{now}}
           </div>
@@ -13,7 +13,7 @@
 
           <div v-show="showMessage" class="message">
             <transition name="v-transition" enter-active-class="animated slideInLeft">
-              <img v-show="showMessage" class="avatar" src="/static/img/logo.jpg">
+              <img v-show="showMessage" class="avatar" src="http://cbpm.sinaapp.com/cdn/static/img/logo.jpg">
             </transition>
             <transition name="v-transition" enter-active-class="animated slideInRight">
               <div v-show="showMessage" class="info">
@@ -22,8 +22,8 @@
             </transition>
           </div>
 
-          <div class="tips">向右滑动加入留言</div>
-        </div>
+          <div class="tips">向左滑动加入留言</div>
+        </v-touch>
       </swiper-item>
       <swiper-item>
         <div class="box" ref="chatBox" :style="{'max-height':chatHeight}">
@@ -50,12 +50,12 @@
             </div>
           </transition-group>
         </div>
-        <div class="dialog-footer">
+        <div class="dialog-footer" v-if="commentsNum<2">
           <div class="component-dialogue-bar-person">
             <div class="chat-way">
-              <input type="text" class="chat-txt" v-model.trim="myChat" @keyup.enter="sendComment">
+              <input type="text" :placeholder="'您还剩'+Math.max(0,2-commentsNum)+'次机会'" class="chat-txt" v-model.trim="myChat" @keyup.enter="sendComment">
             </div>
-            <x-button type="primary" :disabled="myChat==''" mini class="send" @click.native="sendComment">发送</x-button>
+            <x-button type="primary" :disabled="commentsNum>=2 || myChat==''" mini class="send" @click.native="sendComment">发送</x-button>
           </div>
         </div>
       </swiper-item>
@@ -63,7 +63,7 @@
 
     <toast v-model="toast.show">{{ toast.msg }}</toast>
 
-    <div v-show="showArrow" class="iSlider-arrow-right iSlider-arrow-white-right"></div>
+    <div v-show="showArrow" class="iSlider-arrow-left iSlider-arrow-white-left"></div>
   </div>
 </template>
 
@@ -82,7 +82,8 @@
   } from 'vux'
 
   import {
-    mapState
+    mapState,
+    mapMutations
   } from 'vuex'
 
   import FullImage from '@/components/IFullImage/index'
@@ -90,6 +91,8 @@
   import '../assets/css/wechat.css';
   import 'animate.css';
   import defaultMessage from '../assets/data/defaultData.json';
+
+  let bannedList = ['近平','西藏','新疆','独立','SB','达赖','你妈','操','傻逼','煞笔','妈蛋','共产党','法轮','公安']
 
   export default {
     components: {
@@ -116,7 +119,7 @@
           nickname: '品质成钞',
           province: '成都',
           city: '温江',
-          headimgurl: '/static/img/logo.jpg',
+          headimgurl: 'http://cbpm.sinaapp.com/cdn/static/img/logo.jpg',
           isMe: 0
         },
         toast: {
@@ -125,11 +128,21 @@
         },
         startGetData: false,
         isInited: false,
-        intervalTicket: ''
+        intervalTicket: '',
+        commentsNum: 0,
+        chatHeight: window.innerHeight + 'px'
       }
     },
     computed: {
-      ...mapState(['showArrow', 'userInfo', 'cdnUrl']),
+      ...mapState(['showArrow', 'userInfo', 'cdnUrl', 'closeMusic']),
+      mute: {
+        get() {
+          return this.$store.state.mute;
+        },
+        set(val) {
+          this.muteSound(val);
+        }
+      },
       curUsers() {
         return numberComma(this.curUser);
       },
@@ -141,10 +154,6 @@
       },
       screenHeight() {
         return window.innerHeight + 'px';
-      },
-      chatHeight() {
-        // 窗体高度，底部高度，底部留白
-        return (window.innerHeight - 50 - 15) + 'px';
       },
       chatContainer() {
         return this.$refs['chatBox'];
@@ -166,15 +175,45 @@
         this.$nextTick(() => {
           this.scrollToBottom();
         })
+      },
+      commentsNum() {
+        this.getChatHeight();
+      },
+      myChat(val) {
+        if (val.length == 0) {
+          return;
+        }
+        let needBaned = false;
+        bannedList.forEach(item=>{
+          if(val.replace(/ /g,'').includes(item)){
+            needBaned = true;
+          }
+        })
+        if (needBaned) {
+          this.toast.show = true;
+          this.toast.msg = '你这是要干嘛？'
+          this.myChat = '';
+        }
       }
     },
     methods: {
+      ...mapMutations(['muteSound']),
+      getChatHeight() {
+        // 窗体高度，底部高度，底部留白
+        let offset = (this.commentsNum < 2) ? 65 : 0;
+        this.chatHeight = (window.innerHeight - offset) + 'px';
+      },
+      audioPlayer() {
+        if (!this.closeMusic && this.mute) {
+          this.mute = false;
+        }
+      },
       getDefaultSetting() {
         return {
           nickname: '品质成钞',
           province: '成都',
           city: '温江',
-          headimgurl: '/static/img/logo.jpg',
+          headimgurl: 'http://cbpm.sinaapp.com/cdn/static/img/logo.jpg',
           isMe: 0,
           emoji: false
         };
@@ -187,23 +226,23 @@
         let defaultTime = 100;
         this.loadDefaultMessage({
           content: `今天是${dateFormat(new Date(), 'YYYY年M月D日')}，“品质成钞”微信成立两周年啦。钞人贝贝收到了五湖四海的祝福。`
-        }, defaultTime += 1000);
+        }, defaultTime += 2000);
 
         this.loadDefaultMessage({
           content: `<img src="./static/img/beibei.gif" style="width:80px;height:80px;"></img>`,
           emoji: true
-        }, defaultTime += 1000);
+        }, defaultTime += 2000);
 
-        defaultTime += 1000;
+        defaultTime += 2000;
         // 用户ABCD留言
         for (let i = 0; i < defaultMessage.length; i++) {
           setTimeout(() => {
             this.comments.push(defaultMessage[i]);
-          }, defaultTime + i * 2500);
+          }, defaultTime + i * 6000);
         }
         this.loadDefaultMessage({
           content: `你要不要也来说两句？`,
-        }, defaultTime += 12500);
+        }, defaultTime += 6000 * defaultMessage.length);
 
         this.loadDefaultMessage({
           content: `呃……我能说些什么呢?`,
@@ -212,15 +251,15 @@
           city: this.userInfo.city,
           headimgurl: this.userInfo.headimgurl,
           isMe: true,
-        }, defaultTime += 1000);
+        }, defaultTime += 2000);
 
         this.loadDefaultMessage({
           content: `如果你是老粉丝，可以聊聊你喜欢的一期品质成钞微信或者给我们提建议，如果你是新粉丝，就给我们留言送祝福吧。既然来了都是客，快来留言吧！`,
-        }, defaultTime += 1000);
+        }, defaultTime += 2000);
 
         setTimeout(() => {
           this.startGetData = true;
-        }, defaultTime + 2000);
+        }, defaultTime + 4000);
       },
       loadDefaultMessage(settings, waiting = 100) {
         if (!Reflect.get(settings, 'emoji')) {
@@ -267,7 +306,6 @@
         };
       },
       sendComment() {
-
         this.submitComment();
       },
       submitComment() {
@@ -280,17 +318,8 @@
         }).then(res => {
           this.toast.show = true;
           this.toast.msg = res.data.msg;
-          // 实时留言信息不显示
-          // this.comments.push({
-          //   nickname: this.userInfo.nickname,
-          //   province: this.userInfo.province,
-          //   city: this.userInfo.city,
-          //   headimgurl: this.userInfo.headimgurl,
-          //   content: this.myChat,
-          //   isMe: true,
-          //   id: res.data.wx_id
-          // });
           this.myChat = '';
+          this.commentsNum++;
         });
       },
       scrollToBottom() {
@@ -345,6 +374,18 @@
           this.curUser = res.data[0].num;
         })
       },
+      getMyCommentsNum() {
+        let params = {
+          s: '/addon/Api/Api/getMyCommentsNum',
+          openid: this.userInfo.openid
+        }
+        this.$http.jsonp(this.cdnUrl, {
+          params
+        }).then(res => {
+          this.commentsNum = res.data[0].num;
+          console.log(this.commentsNum);
+        })
+      },
       init() {
         this.getAllCommentNum();
         setTimeout(() => {
@@ -354,6 +395,7 @@
     },
     mounted() {
       this.init();
+      this.getMyCommentsNum();
     },
     created() {
       this.refreshTime();

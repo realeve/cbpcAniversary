@@ -4,8 +4,8 @@
     <div class="bg-dot"></div>
     <div class="fixedcon">
       <div class="control">
-        <i v-show="showArrow" class="music show" :class="{mute}" title="背景音乐" @click="audioPlayer"></i>
-        <audio src="//cbpm.sinaapp.com/cdn/audio/bg.mp3" autoplay loop="loop" ref="audio"></audio>
+        <v-touch tag="i" v-on:tap="audioPlayer" v-show="showArrow" class="music show" :class="{mute}" title="背景音乐" ></v-touch>
+        <audio src="//cbpm.sinaapp.com/cdn/audio/bg.mp3" loop="loop" autoplay ref="audio"></audio>
       </div>
     </div>
   </div>
@@ -16,35 +16,49 @@
 </style>
 <script>
   import {
-    mapState
+    mapState,mapMutations
   } from 'vuex'
   export default {
-    data() {
-      return {
-        mute: false,
-      }
-    },
     computed: {
-      ...mapState(['showArrow']),
+      ...mapState(['showArrow', 'cdnUrl']),
       player() {
         return this.$refs.audio;
+      },
+      mute:{
+        get(){
+          return this.$store.state.mute;
+        },
+        set(val){
+          this.muteSound(val);
+        }
+      },
+      closeMusic:{
+        get(){
+          return this.$store.state.closeMusic;
+        },
+        set(val){
+          this.closeMusicByUser(val);
+        }
+      }
+    },
+    watch:{
+      mute(val){
+        if(val){
+          this.player.pause();
+        }else{
+          this.player.play();
+        }
       }
     },
     methods: {
+      ...mapMutations(['muteSound','closeMusicByUser']),
       audioPlayer() {
-        if (this.player.paused) {
-          this.player.play();
-        } else {
-          this.player.pause();
-        }
         this.mute = !this.mute;
+        this.closeMusic = true;
       }
     },
     mounted() {
       this.player.volume = 0.4;
-    },
-    activated(){
-      this.player.play();
     }
   }
 

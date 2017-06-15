@@ -12,7 +12,9 @@ import router from './router'
 
 import { WechatPlugin } from 'vux'
 Vue.use(WechatPlugin)
-    // console.log(Vue.wechat) // 可以直接访问 wx 对象。
+
+let VueTouch = require('vue-touch')
+Vue.use(VueTouch, { name: 'v-touch' })
 
 router.beforeEach(function(to, from, next) {
     store.commit('updateLoadingStatus', { isLoading: true })
