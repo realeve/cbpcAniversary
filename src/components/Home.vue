@@ -17,7 +17,7 @@
             </transition>
             <transition name="v-transition" enter-active-class="animated slideInRight">
               <div v-show="showMessage" class="info">
-                当前共 {{curUsers}} 人 参与留言，
+                欢迎来到品质成钞两周年庆，
                 <x-button mini plain class="button-primary-white" @click.native="viewLucky">点击此处</x-button>查看幸运楼层。</div>
             </transition>
           </div>
@@ -42,7 +42,7 @@
             <div v-for="(item,floors) in comments" :key="floors" class="message" :class="{me:item.isMe}">
               <img class="avatar" :src="item.headimgurl">
               <div class="content" :class="{'align-right':item.isMe,'align-left':!item.isMe}">
-                <p class="user" :class="{me:item.isMe}">{{item.nickname}} ({{item.province}}{{item.city}}) <span v-if="item.id">#{{item.id}}</span></p>
+                <p class="user" :class="{me:item.isMe}">{{item.nickname}} ({{item.province}}{{item.city}}) <span v-if="item.id&&item.isMe">#{{item.id}}</span></p>
                 <div class="bubble bubble_default" :class="{right:item.isMe,left:!item.isMe,bubble_primary:item.isMe,emoji:item.emoji}">
                   <p v-html="item.content"></p>
                 </div>
@@ -63,7 +63,7 @@
 
     <toast v-model="toast.show">{{ toast.msg }}</toast>
 
-    <div v-show="showArrow" class="iSlider-arrow-left iSlider-arrow-white-left"></div>
+    <div v-show="showArrow" class="iSlider-arrow-right iSlider-arrow-white-right"></div>
   </div>
 </template>
 
@@ -108,7 +108,6 @@
         now: '00:00',
         swiperItemIndex: 0,
         myChat: '',
-        curUser: '0',
         comments: [],
         showMessage: false,
         curid: {
@@ -142,9 +141,6 @@
         set(val) {
           this.muteSound(val);
         }
-      },
-      curUsers() {
-        return numberComma(this.curUser);
       },
       today() {
         return dateFormat(new Date(), 'M月D日 星期E');
@@ -229,7 +225,7 @@
         }, defaultTime += 2000);
 
         this.loadDefaultMessage({
-          content: `<img src="./static/img/beibei.gif" style="width:80px;height:80px;"></img>`,
+          content: `<img src="http://cbpm.sinaapp.com/cdn/static/img/beibei.gif" style="width:80px;height:80px;"></img>`,
           emoji: true
         }, defaultTime += 2000);
 
@@ -364,16 +360,6 @@
           this.loadMoreComment();
         }, 3000);
       },
-      getAllCommentNum() {
-        let params = {
-          s: '/addon/Api/Api/getAllCommentNum'
-        }
-        this.$http.jsonp(this.cdnUrl, {
-          params
-        }).then(res => {
-          this.curUser = res.data[0].num;
-        })
-      },
       getMyCommentsNum() {
         let params = {
           s: '/addon/Api/Api/getMyCommentsNum',
@@ -383,11 +369,9 @@
           params
         }).then(res => {
           this.commentsNum = res.data[0].num;
-          console.log(this.commentsNum);
         })
       },
       init() {
-        this.getAllCommentNum();
         setTimeout(() => {
           this.showMessage = true;
         }, 500);

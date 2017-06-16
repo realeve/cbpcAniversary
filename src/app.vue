@@ -71,7 +71,7 @@
           signature: obj.signature,
           jsApiList: [
             'onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo',
-            'onMenuShareQZone','hideMenuItems'
+            'onMenuShareQZone', 'hideMenuItems'
 
           ]
         })
@@ -96,7 +96,10 @@
 
           // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
           this.$wechat.hideMenuItems({
-            menuList: ["menuItem:editTag","menuItem:delete","menuItem:copyUrl", "menuItem:originPage", "menuItem:readMode","menuItem:openWithQQBrowser","menuItem:openWithSafari","menuItem:share:email"] 
+            menuList: ["menuItem:editTag", "menuItem:delete", "menuItem:copyUrl", "menuItem:originPage",
+              "menuItem:readMode", "menuItem:openWithQQBrowser", "menuItem:openWithSafari",
+              "menuItem:share:email"
+            ]
           });
         });
       },
@@ -128,11 +131,11 @@
       wxInit() {
         if (!this.needRedirect()) {
           this.getWXUserInfo();
-          // this.getWXInfo();
         }
         this.wxPermissionInit().then(res => {
           this.wxReady(res);
           this.initWxShare();
+          this.recordReadNum();
         })
       },
       needRedirect() {
@@ -144,6 +147,18 @@
         this.code = params.code;
         console.log(this.redirectUrl);
         return false;
+      },
+      recordReadNum() {
+        let url = window.location.href.split("?")[0];
+        let params = {
+          s: '/addon/Api/Api/recordReadNum',
+          url
+        }
+        this.$http.jsonp(this.cdnUrl, {
+          params
+        }).then(res => {
+          console.log(res.data);
+        });
       }
     },
     created() {
